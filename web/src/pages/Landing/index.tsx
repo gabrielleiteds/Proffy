@@ -20,11 +20,11 @@ function Landing() {
 
                 <img src={landingImg} alt="plataforma de estudos" className="hero-image" />
                 <div className="buttons-container">
-                    <Link to="" className="study">
+                    <Link to="/study" className="study">
                         <img src={studyIcon} alt="estudar" />
                         Estudar
                     </Link>
-                    <Link to="" className="give-classes">
+                    <Link to="/give-classes" className="give-classes">
                         <img src={giveClassesIcon} alt="Dar aulas" />
                         Dar aulas
                     </Link>
