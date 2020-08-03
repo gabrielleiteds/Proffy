@@ -1,12 +1,15 @@
 import React from 'react';
 
+//style global
 import './assets/styles/global.css';
 
-import Landing from './pages/Landing';
+//routes
+import Routes from './routes';
+
 
 function App() {
   return (
-    <Landing />
+    <Routes />
   );
 }
 
