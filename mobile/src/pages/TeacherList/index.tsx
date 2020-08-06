@@ -4,10 +4,13 @@ import { View } from 'react-native';
 //styles
 import styles from './styles';
 
+//header
+import PageHeader from '../../components/PageHeader'; 
+
 function TeacherList() {
     return (
         <View style={styles.container}> 
-        
+            <PageHeader title="Proffys disponíveis"/>
         </View>
     )
 }
