@@ -31,7 +31,7 @@ function TeacherList() {
                 )}
             > 
                 {filtersVisible && (
-                    <View styles={styles.searchForm}>
+                    <View style={styles.searchForm}>
                         <Text style={styles.label}>Matéria</Text>
                         <TextInput placeholderTextColor="#c1bccc" style={styles.input} placeholder="Qual a matéria?" />
 
