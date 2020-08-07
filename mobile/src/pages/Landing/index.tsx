@@ -10,6 +10,9 @@ import landingImg from '../../assets/images/landing.png';
 import studyIcon from '../../assets/images/icons/study.png';
 import giveClasses from '../../assets/images/icons/give-classes.png';
 import heartIcon from '../../assets/images/icons/heart.png';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import api from '../../services/api';
 
 function Landing() {
     const { navigate } = useNavigation();
@@ -21,6 +24,16 @@ function Landing() {
     function handleNavigateStudyPages() {
         navigate('study')
     }
+
+    const [connections, setConnections] = useState(0)
+
+    useEffect(() => {
+        api.get('connections').then(response => {
+            const {total} = response.data;
+
+            setConnections(total)
+        })
+    }, [])
 
     return (
         <View style={styles.container}>
@@ -43,7 +56,7 @@ function Landing() {
             </View>
 
             <Text style={styles.totalConnections}>
-                Total de 200 conexões já realizadas {' '}
+                Total de {connections} conexões já realizadas {' '}
                 <Image source={heartIcon} />
             </Text>
 

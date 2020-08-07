@@ -1,47 +1,99 @@
-import React from 'react';
-import { Image, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { Image, Text, View, Linking } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
-
+import asyncStorage from '@react-native-community/async-storage'
 import styles from './styles';
 
 import heartOutlineIcon from '../../assets/images/icons/heart-outline.png';
 import noFavorite from '../../assets/images/icons/unfavorite.png';
-import whatsappIcon from '../../assets/images/icons/whatsapp.png'; 
+import whatsappIcon from '../../assets/images/icons/whatsapp.png';
 
-function Teacheritem() {
-    return(
+export interface Teacher {
+    id: number,
+    avatar: string,
+    bio: string,
+    cost: number,
+    name: string,
+    subject: string,
+    whatsapp: string
+
+}
+
+interface TeacherItemProps {
+    teacher: Teacher;
+    favorited: boolean;
+}
+
+const Teacheritem: React.FC<TeacherItemProps> = ({ teacher, favorited }) => {
+
+    const [isFavorited, setIsfavorited] = useState(favorited);
+
+    function handleLinkToWhatsapp() {
+        Linking.openURL(`whatsapp://send?phone=${teacher.whatsapp}`)
+    }
+
+    async function handleToggleFavorite() {
+        const favorites = await asyncStorage.getItem('favorites')
+
+        let favoritesArray = [];
+
+        if (favorites) {
+            favoritesArray = JSON.parse(favorites)
+        }
+
+        if (isFavorited) {
+            const favoriteIndex = favoritesArray.findIndex((teacherItem: Teacher) => {
+                return teacherItem.id === teacher.id;
+            })
+
+            favoritesArray.splice(favoriteIndex, 1)
+            setIsfavorited(false)
+        }
+        else {
+            favoritesArray.push(teacher)
+
+            setIsfavorited(true)
+        }
+
+        await asyncStorage.setItem('favorites', JSON.stringify(favoritesArray))
+    }
+
+    return (
         <View style={styles.container}>
             <View style={styles.profile}>
-                <Image style={styles.avatar} source={{uri: 'https://github.com/diego3g'}} />
+                <Image style={styles.avatar} source={{ uri: teacher.avatar }} />
 
                 <View style={styles.profileInfo}>
-                    <Text style={styles.name}>Gabriel Leite</Text>
-                    <Text style={styles.subject}>Matemática</Text>
+                    <Text style={styles.name}>{teacher.name}</Text>
+                    <Text style={styles.subject}>{teacher.subject}</Text>
                 </View>
             </View>
 
-            <Text style={styles.bio}>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Mollitia veniam sit error quia dolores soluta, debitis quibusdam minima culpa, fugiat delectus reiciendis voluptatem tempore molestiae! Magni cumque tempore autem at!</Text>
+            <Text style={styles.bio}>{teacher.bio}</Text>
             <View style={styles.footer}>
                 <Text style={styles.price}>
-                    Preço/hora: {'  '} 
+                    Preço/hora: {'  '}
                     <Text style={styles.priceValue}>
-                        R$ 20,00
+                        R$ {teacher.cost}
                     </Text>
                 </Text>
 
                 <View style={styles.buttonsContainer}>
-                    <RectButton style={[styles.favoriteButton, styles.favorited]}>
-                        {/* <Image source={heartOutlineIcon} /> */}
-                        <Image source={noFavorite} />
+                    <RectButton onPress={handleToggleFavorite} style={[
+                        styles.favoriteButton,
+                        isFavorited ? styles.favorited : {},
+                    ]}>
+                        {isFavorited ? <Image source={noFavorite} /> : <Image source={heartOutlineIcon} />}
+
                     </RectButton>
 
-                    <RectButton style={styles.contactButton}>
+                    <RectButton onPress={handleLinkToWhatsapp} style={styles.contactButton}>
                         <Image source={whatsappIcon} />
                         <Text style={styles.contactButtonText}>Entrar em contato</Text>
                     </RectButton>
                 </View>
             </View>
-        
+
         </View>
     )
 }
